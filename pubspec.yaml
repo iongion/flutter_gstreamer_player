@@ -10,6 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  flutter_gif: ^0.0.4
 
 dev_dependencies:
   flutter_test:
@@ -36,9 +37,8 @@ flutter:
         pluginClass: FlutterGstreamerPlayerPlugin
 
   # To add assets to your plugin package, add an assets section, like this:
-  # assets:
-  #   - images/a_dot_burr.jpeg
-  #   - images/a_dot_ham.jpeg
+  assets:
+    - video/gif/noises1.gif
   #
   # For details regarding assets in packages, see
   # https://flutter.dev/assets-and-images/#from-packages

@@ -1,12 +1,11 @@
-
 import 'dart:async';
-
+import 'package:flutter_gif/flutter_gif.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
 class GstPlayerTextureController {
-  static const MethodChannel _channel = MethodChannel('flutter_gstreamer_player');
-
+  static const MethodChannel _channel =
+      MethodChannel('flutter_gstreamer_player');
   int textureId = 0;
   static int _id = 0;
 
@@ -24,7 +23,7 @@ class GstPlayerTextureController {
   }
 
   Future<Null> dispose() {
-      return _channel.invokeMethod('dispose', {'textureId': textureId});
+    return _channel.invokeMethod('dispose', {'textureId': textureId});
   }
 
   bool get isInitialized => textureId != null;
@@ -41,11 +40,14 @@ class GstPlayer extends StatefulWidget {
 
 class _GstPlayerState extends State<GstPlayer> {
   final _controller = GstPlayerTextureController();
-
+  late FlutterGifController controllerGif;
   @override
   void initState() {
-    initializeController();
     super.initState();
+    initializeController();
+    controllerGif = FlutterGifController(vsync: this);
+    controllerGif.repeat(
+        min: 0, max: 29, period: const Duration(milliseconds: 2500));
   }
 
   @override
@@ -72,8 +74,14 @@ class _GstPlayerState extends State<GstPlayer> {
       case TargetPlatform.android:
         return Container(
           child: _controller.isInitialized
-            ? Texture(textureId: _controller.textureId)
-            : null,
+              ? Texture(textureId: _controller.textureId)
+              : GifImage(
+                  width: double.infinity,
+                  height: double.infinity,
+                  repeat: ImageRepeat.repeat,
+                  controller: controllerGif,
+                  image: const AssetImage("assets/videos/noises1.gif"),
+                ),
         );
         break;
       case TargetPlatform.iOS:
