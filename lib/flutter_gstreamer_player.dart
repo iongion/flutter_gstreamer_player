@@ -1,3 +1,5 @@
+// ignore_for_file: unnecessary_null_comparison, must_be_immutable
+
 import 'dart:async';
 import 'package:flutter_gif/flutter_gif.dart';
 import 'package:flutter/services.dart';
@@ -38,7 +40,7 @@ class GstPlayer extends StatefulWidget {
   State<GstPlayer> createState() => _GstPlayerState();
 }
 
-class _GstPlayerState extends State<GstPlayer> {
+class _GstPlayerState extends State<GstPlayer> with TickerProviderStateMixin {
   final _controller = GstPlayerTextureController();
   late FlutterGifController controllerGif;
   @override
@@ -66,6 +68,13 @@ class _GstPlayerState extends State<GstPlayer> {
   }
 
   @override
+  void dispose() {
+    controllerGif.dispose();
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var currentPlatform = Theme.of(context).platform;
 
@@ -73,17 +82,10 @@ class _GstPlayerState extends State<GstPlayer> {
       case TargetPlatform.linux:
       case TargetPlatform.android:
         return Container(
-          child: _controller.isInitialized
-              ? Texture(textureId: _controller.textureId)
-              : GifImage(
-                  width: double.infinity,
-                  height: double.infinity,
-                  repeat: ImageRepeat.repeat,
-                  controller: controllerGif,
-                  image: const AssetImage("assets/videos/noises1.gif"),
-                ),
-        );
-        break;
+            child: _controller.isInitialized
+                ? Texture(textureId: _controller.textureId)
+                : null);
+
       case TargetPlatform.iOS:
         String viewType = _controller.textureId.toString();
         final Map<String, dynamic> creationParams = <String, dynamic>{};
@@ -93,7 +95,7 @@ class _GstPlayerState extends State<GstPlayer> {
           creationParams: creationParams,
           creationParamsCodec: const StandardMessageCodec(),
         );
-        break;
+
       default:
         throw UnsupportedError('Unsupported platform view');
     }

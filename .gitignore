@@ -28,3 +28,4 @@
 .packages
 build/
 android/gst-android-build/
+android/.cxx

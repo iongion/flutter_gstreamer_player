@@ -36,9 +36,12 @@ flutter:
       ios:
         pluginClass: FlutterGstreamerPlayerPlugin
 
+
+  uses-material-design: true
+  generate: true
   # To add assets to your plugin package, add an assets section, like this:
   assets:
-    - video/gif/noises1.gif
+    - assets/
   #
   # For details regarding assets in packages, see
   # https://flutter.dev/assets-and-images/#from-packages

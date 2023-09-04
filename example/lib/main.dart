@@ -13,11 +13,11 @@ class MyApp extends StatelessWidget {
   Widget initMultipleGstPlayer(List<String> pipelines) {
     // Try this: https://stackoverflow.com/a/66421214
     List<Widget> videoListWidget = [];
-    for (var i = 0; i < pipelines.length - 1; i = i + 2){
+    for (var i = 0; i < pipelines.length - 1; i = i + 2) {
       videoListWidget.add(
         Expanded(
           child: Row(
-            children: <Widget> [
+            children: <Widget>[
               Expanded(
                 child: GstPlayer(
                   pipeline: pipelines[i],
@@ -25,7 +25,7 @@ class MyApp extends StatelessWidget {
               ),
               Expanded(
                 child: GstPlayer(
-                  pipeline: pipelines[i+1],
+                  pipeline: pipelines[i + 1],
                 ),
               ),
             ],
@@ -38,7 +38,7 @@ class MyApp extends StatelessWidget {
       videoListWidget.add(
         Expanded(
           child: Row(
-            children: <Widget> [
+            children: <Widget>[
               Expanded(
                 child: GstPlayer(
                   pipeline: pipelines.last,
@@ -51,8 +51,8 @@ class MyApp extends StatelessWidget {
     }
 
     Widget multipleGstPlayer = Column(
-          children: videoListWidget,
-        );
+      children: videoListWidget,
+    );
 
     return multipleGstPlayer;
   }
