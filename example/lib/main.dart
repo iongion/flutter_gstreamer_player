@@ -1,14 +1,18 @@
+// ignore_for_file: must_be_immutable
+
 import 'package:flutter/material.dart';
 import 'package:flutter/foundation.dart';
 
 import 'package:flutter_gstreamer_player/flutter_gstreamer_player.dart';
 
 void main() {
-  runApp(const MyApp());
+  runApp(MyApp());
 }
 
 class MyApp extends StatelessWidget {
-  const MyApp({Key? key}) : super(key: key);
+  MyApp({Key? key}) : super(key: key);
+
+  GstPlayerTextureController controller = GstPlayerTextureController();
 
   Widget initMultipleGstPlayer(List<String> pipelines) {
     // Try this: https://stackoverflow.com/a/66421214
@@ -21,11 +25,13 @@ class MyApp extends StatelessWidget {
               Expanded(
                 child: GstPlayer(
                   pipeline: pipelines[i],
+                  controller: controller,
                 ),
               ),
               Expanded(
                 child: GstPlayer(
                   pipeline: pipelines[i + 1],
+                  controller: controller,
                 ),
               ),
             ],
@@ -42,6 +48,7 @@ class MyApp extends StatelessWidget {
               Expanded(
                 child: GstPlayer(
                   pipeline: pipelines.last,
+                  controller: controller,
                 ),
               ),
             ],

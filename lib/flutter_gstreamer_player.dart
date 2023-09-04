@@ -1,7 +1,6 @@
 // ignore_for_file: unnecessary_null_comparison, must_be_immutable
 
 import 'dart:async';
-import 'package:flutter_gif/flutter_gif.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
@@ -24,7 +23,7 @@ class GstPlayerTextureController {
     return textureId;
   }
 
-  Future<Null> dispose() {
+  Future<void> dispose() {
     return _channel.invokeMethod('dispose', {'textureId': textureId});
   }
 
@@ -33,23 +32,23 @@ class GstPlayerTextureController {
 
 class GstPlayer extends StatefulWidget {
   String pipeline;
+  GstPlayerTextureController controller;
 
-  GstPlayer({Key? key, required this.pipeline}) : super(key: key);
+  GstPlayer({Key? key, required this.pipeline, required this.controller})
+      : super(key: key);
 
   @override
   State<GstPlayer> createState() => _GstPlayerState();
+  void dispose() {
+    controller.dispose();
+  }
 }
 
 class _GstPlayerState extends State<GstPlayer> with TickerProviderStateMixin {
-  final _controller = GstPlayerTextureController();
-  late FlutterGifController controllerGif;
   @override
   void initState() {
     super.initState();
     initializeController();
-    controllerGif = FlutterGifController(vsync: this);
-    controllerGif.repeat(
-        min: 0, max: 29, period: const Duration(milliseconds: 2500));
   }
 
   @override
@@ -60,18 +59,11 @@ class _GstPlayerState extends State<GstPlayer> with TickerProviderStateMixin {
     super.didUpdateWidget(oldWidget);
   }
 
-  Future<Null> initializeController() async {
-    await _controller.initialize(
+  Future<void> initializeController() async {
+    await widget.controller.initialize(
       widget.pipeline,
     );
     setState(() {});
-  }
-
-  @override
-  void dispose() {
-    controllerGif.dispose();
-    _controller.dispose();
-    super.dispose();
   }
 
   @override
@@ -82,12 +74,12 @@ class _GstPlayerState extends State<GstPlayer> with TickerProviderStateMixin {
       case TargetPlatform.linux:
       case TargetPlatform.android:
         return Container(
-            child: _controller.isInitialized
-                ? Texture(textureId: _controller.textureId)
+            child: widget.controller.isInitialized
+                ? Texture(textureId: widget.controller.textureId)
                 : null);
 
       case TargetPlatform.iOS:
-        String viewType = _controller.textureId.toString();
+        String viewType = widget.controller.textureId.toString();
         final Map<String, dynamic> creationParams = <String, dynamic>{};
         return UiKitView(
           viewType: viewType,
