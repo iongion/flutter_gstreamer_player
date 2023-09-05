@@ -52,6 +52,7 @@ class _GstPlayerState extends State<GstPlayer> with TickerProviderStateMixin {
   void didUpdateWidget(GstPlayer oldWidget) {
     if (widget.pipeline != oldWidget.pipeline) {
       initializeController();
+      print("pipeline: ${widget.pipeline}");
     }
     super.didUpdateWidget(oldWidget);
   }
