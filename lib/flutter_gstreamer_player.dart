@@ -14,7 +14,7 @@ class GstPlayerTextureController {
     // No idea why, but you have to increase `_id` first before pass it to method channel,
     // if not, receiver of method channel always received 0
 
-    GstPlayerTextureController._id = GstPlayerTextureController._id + 1;
+    // GstPlayerTextureController._id = GstPlayerTextureController._id + 1;
 
     textureId = await _channel.invokeMethod('PlayerRegisterTexture', {
       'pipeline': pipeline,
@@ -40,7 +40,7 @@ class GstPlayer extends StatefulWidget {
   State<GstPlayer> createState() => _GstPlayerState();
 }
 
-class _GstPlayerState extends State<GstPlayer> with TickerProviderStateMixin {
+class _GstPlayerState extends State<GstPlayer> {
   final _controller = GstPlayerTextureController();
   @override
   void initState() {
