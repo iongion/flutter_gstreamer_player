@@ -33,20 +33,15 @@ class GstPlayerTextureController {
 
 class GstPlayer extends StatefulWidget {
   String pipeline;
-  GstPlayerTextureController controller;
 
-  GstPlayer({Key? key, required this.pipeline, required this.controller})
-      : super(key: key);
-
-  void dispose() {
-    controller.dispose();
-  }
+  GstPlayer({Key? key, required this.pipeline}) : super(key: key);
 
   @override
   State<GstPlayer> createState() => _GstPlayerState();
 }
 
 class _GstPlayerState extends State<GstPlayer> with TickerProviderStateMixin {
+  final _controller = GstPlayerTextureController();
   @override
   void initState() {
     super.initState();
@@ -62,7 +57,7 @@ class _GstPlayerState extends State<GstPlayer> with TickerProviderStateMixin {
   }
 
   Future<void> initializeController() async {
-    await widget.controller.initialize(
+    await _controller.initialize(
       widget.pipeline,
     );
     setState(() {});
@@ -76,12 +71,12 @@ class _GstPlayerState extends State<GstPlayer> with TickerProviderStateMixin {
       case TargetPlatform.linux:
       case TargetPlatform.android:
         return Container(
-            child: widget.controller.isInitialized
-                ? Texture(textureId: widget.controller.textureId)
+            child: _controller.isInitialized
+                ? Texture(textureId: _controller.textureId)
                 : null);
 
       case TargetPlatform.iOS:
-        String viewType = widget.controller.textureId.toString();
+        String viewType = _controller.textureId.toString();
         final Map<String, dynamic> creationParams = <String, dynamic>{};
         return UiKitView(
           viewType: viewType,
