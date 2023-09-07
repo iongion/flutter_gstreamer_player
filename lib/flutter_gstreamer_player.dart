@@ -74,7 +74,9 @@ class _GstPlayerState extends State<GstPlayer> {
         return Container(
             child: _controller.isInitialized
                 ? Texture(textureId: _controller.textureId)
-                : null);
+                : Container(
+                    color: Colors.blue,
+                  ));
 
       case TargetPlatform.iOS:
         String viewType = _controller.textureId.toString();
