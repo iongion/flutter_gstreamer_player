@@ -1,32 +1,43 @@
 // ignore_for_file: unnecessary_null_comparison, must_be_immutable
 
 import 'dart:async';
+import 'dart:io';
+import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_gif/flutter_gif.dart';
 
 class GstPlayerTextureController {
   static const MethodChannel _channel =
       MethodChannel('flutter_gstreamer_player');
   int textureId = 0;
-  static int _id = 0;
+
+  static const int _id = 0;
 
   Future<int> initialize(String pipeline) async {
     // No idea why, but you have to increase `_id` first before pass it to method channel,
     // if not, receiver of method channel always received 0
 
     // GstPlayerTextureController._id = GstPlayerTextureController._id + 1;
-
     textureId = await _channel.invokeMethod('PlayerRegisterTexture', {
       'pipeline': pipeline,
       'playerId': GstPlayerTextureController._id,
+      'surface': 0,
     });
-
+    print(textureId.toString());
     return textureId;
   }
 
-  Future<void> dispose() {
-    return _channel.invokeMethod('dispose', {'textureId': textureId});
+  Future<String> versionAndroid() async {
+    String platformVersionAndroid = "";
+    platformVersionAndroid =
+        await _channel.invokeMethod('getPlatformVersion', {});
+    print("platformVersionAndroid $platformVersionAndroid");
+    return platformVersionAndroid;
   }
+
+  Future<void> dispose() =>
+      _channel.invokeMethod('dispose', {'textureId': textureId});
 
   bool get isInitialized => textureId != null;
 }
@@ -40,12 +51,18 @@ class GstPlayer extends StatefulWidget {
   State<GstPlayer> createState() => _GstPlayerState();
 }
 
-class _GstPlayerState extends State<GstPlayer> {
+class _GstPlayerState extends State<GstPlayer> with TickerProviderStateMixin {
   final _controller = GstPlayerTextureController();
+  bool isReceive = false;
+  late FlutterGifController controllerGif;
   @override
   void initState() {
     super.initState();
     initializeController();
+    udpreceive();
+    controllerGif = FlutterGifController(vsync: this);
+    controllerGif.repeat(
+        min: 0, max: 29, period: const Duration(milliseconds: 2500));
   }
 
   @override
@@ -58,10 +75,36 @@ class _GstPlayerState extends State<GstPlayer> {
   }
 
   Future<void> initializeController() async {
-    await _controller.initialize(
-      widget.pipeline,
-    );
+    await _controller.initialize(widget.pipeline);
+    if (Platform.isAndroid) {
+      await _controller.versionAndroid();
+    }
     setState(() {});
+  }
+
+  void udpreceive() async {
+    while (true) {
+      final udpPort = 8270; // Port UDP à surveiller
+
+      final udpSocket =
+          await RawDatagramSocket.bind(InternetAddress.anyIPv4, udpPort);
+
+      udpSocket.listen((RawSocketEvent event) {
+        if (event == RawSocketEvent.read) {
+          final datagram = udpSocket.receive();
+          if (datagram != null) {
+            print(
+                'Données UDP reçues depuis ${datagram.address}:${datagram.port}');
+            isReceive = true;
+            setState(() {});
+          }
+        }
+      });
+      isReceive = false;
+      print('En attente de données UDP sur le port $udpPort...');
+      setState(() {});
+      await Future.delayed(const Duration(seconds: 1));
+    }
   }
 
   @override
@@ -72,11 +115,16 @@ class _GstPlayerState extends State<GstPlayer> {
       case TargetPlatform.linux:
       case TargetPlatform.android:
         return Container(
-            child: _controller.isInitialized
-                ? Texture(textureId: _controller.textureId)
-                : Container(
-                    color: Colors.blue,
-                  ));
+          child: isReceive
+              ? Texture(textureId: _controller.textureId)
+              : GifImage(
+                  width: double.infinity,
+                  height: double.infinity,
+                  repeat: ImageRepeat.repeat,
+                  controller: controllerGif,
+                  image: const AssetImage("/assets/noises1.gif"),
+                ),
+        );
 
       case TargetPlatform.iOS:
         String viewType = _controller.textureId.toString();
