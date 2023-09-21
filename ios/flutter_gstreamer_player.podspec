@@ -25,10 +25,10 @@ A new Flutter plugin project.
   s.vendored_frameworks = 'GStreamer.framework'
   s.xcconfig              = {
     'HEADER_SEARCH_PATHS' => [
-        '"$(HOME)/Library/Developer/GStreamer/iPhone.sdk/GStreamer.framework/Headers"'
+        '"$(PWD)/GStreamer.framework/Headers"'
     ],
     'FRAMEWORK_SEARCH_PATHS' => [
-        '"$(HOME)/Library/Developer/GStreamer/iPhone.sdk"',
+        '"/Library/Developer/GStreamer/iPhone.sdk"',
         '"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks"'
     ],
     'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES'

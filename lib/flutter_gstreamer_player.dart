@@ -53,13 +53,14 @@ class GstPlayer extends StatefulWidget {
 
 class _GstPlayerState extends State<GstPlayer> with TickerProviderStateMixin {
   final _controller = GstPlayerTextureController();
-  bool isReceive = false;
+  GlobalKey key = GlobalKey();
+  bool isReceive = true;
   late FlutterGifController controllerGif;
   @override
   void initState() {
     super.initState();
     initializeController();
-    udpreceive();
+    // udpreceive();
     controllerGif = FlutterGifController(vsync: this);
     controllerGif.repeat(
         min: 0, max: 29, period: const Duration(milliseconds: 2500));
@@ -82,30 +83,25 @@ class _GstPlayerState extends State<GstPlayer> with TickerProviderStateMixin {
     setState(() {});
   }
 
-  void udpreceive() async {
-    while (true) {
-      final udpPort = 8270; // Port UDP à surveiller
-
-      final udpSocket =
-          await RawDatagramSocket.bind(InternetAddress.anyIPv4, udpPort);
-
-      udpSocket.listen((RawSocketEvent event) {
-        if (event == RawSocketEvent.read) {
-          final datagram = udpSocket.receive();
-          if (datagram != null) {
-            print(
-                'Données UDP reçues depuis ${datagram.address}:${datagram.port}');
-            isReceive = true;
-            setState(() {});
-          }
-        }
-      });
-      isReceive = false;
-      print('En attente de données UDP sur le port $udpPort...');
-      setState(() {});
-      await Future.delayed(const Duration(seconds: 1));
-    }
-  }
+  //     final udpSocket =
+  //         await RawDatagramSocket.bind(InternetAddress.anyIPv4, udpPort);
+  //     udpSocket.listen((RawSocketEvent event) {
+  //       if (event == RawSocketEvent.read) {
+  //         final datagram = udpSocket.receive();
+  //         if (datagram != null) {
+  //           print(
+  //               'Données UDP reçues depuis ${datagram.address}:${datagram.port}');
+  //           isReceive = true;
+  //           setState(() {});
+  //         }
+  //       }
+  //     });
+  //     isReceive = false;
+  //     print('En attente de données UDP sur le port $udpPort...');
+  //     setState(() {});
+  //     await Future.delayed(const Duration(seconds: 1));
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -115,16 +111,26 @@ class _GstPlayerState extends State<GstPlayer> with TickerProviderStateMixin {
       case TargetPlatform.linux:
       case TargetPlatform.android:
         return Container(
-          child: isReceive
-              ? Texture(textureId: _controller.textureId)
-              : GifImage(
-                  width: double.infinity,
-                  height: double.infinity,
-                  repeat: ImageRepeat.repeat,
-                  controller: controllerGif,
-                  image: const AssetImage("/assets/noises1.gif"),
-                ),
-        );
+            child: isReceive
+                ? Stack(
+                    children: [
+                      Container(
+                        color: Colors.amber,
+                      ),
+                      Texture(key: key, textureId: _controller.textureId),
+                    ],
+                  )
+                : Container(
+                    color: Colors.amber,
+                  )
+            // : GifImage(
+            //     width: double.infinity,
+            //     height: double.infinity,
+            //     repeat: ImageRepeat.repeat,
+            //     controller: controllerGif,
+            //     image: const AssetImage("assets/images/neige.gif"),
+            //   ),
+            );
 
       case TargetPlatform.iOS:
         String viewType = _controller.textureId.toString();
