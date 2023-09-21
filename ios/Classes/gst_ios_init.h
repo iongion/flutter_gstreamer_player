@@ -1,9 +1,9 @@
 #ifndef __GST_IOS_INIT_H__
 #define __GST_IOS_INIT_H__
 
-#include <GStreamer/gst/gst.h>
+// #include <gst/gst.h>
 
-G_BEGIN_DECLS
+// G_BEGIN_DECLS
 
 #define GST_G_IO_MODULE_DECLARE(name) \
 extern void G_PASTE(g_io_, G_PASTE(name, _load)) (gpointer module)
@@ -30,10 +30,10 @@ G_PASTE(g_io_, G_PASTE(name, _load)) (NULL)
 //#define GST_IOS_PLUGINS_GES
 
 
-#define GST_IOS_GIO_MODULE_GNUTLS
+//#define GST_IOS_GIO_MODULE_GNUTLS
 
 void gst_ios_init (void);
 
-G_END_DECLS
+// G_END_DECLS
 
 #endif
