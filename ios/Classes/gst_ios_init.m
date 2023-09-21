@@ -1,6 +1,6 @@
 #include "gst_ios_init.h"
 
-#include <gst/gst.h>
+// #include <gst/gst.h>
 
 #include <gio/gio.h>
 
