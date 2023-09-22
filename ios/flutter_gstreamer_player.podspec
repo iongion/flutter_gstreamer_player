@@ -23,7 +23,6 @@ A new Flutter plugin project.
 
   s.frameworks = 'CoreFoundation', 'Foundation', 'AVFoundation', 'CoreMedia', 'CoreVideo', 'CoreAudio', 'AudioToolbox', 'OpenGLES', 'AssetsLibrary', 'QuartzCore', 'AssetsLibrary', 'VideoToolBox', 'UIKit', 'libiconv.2.tbd','Metal', 'IOSurface'
   s.vendored_frameworks = 'GStreamer.framework'
-  s.ios.vendored_frameworks = 'GStreamer.framework'
   s.xcconfig              = {
     'HEADER_SEARCH_PATHS' => [
         '"$(HOME)/Library/Developer/GStreamer/iPhone.sdk/GStreamer.framework/Headers"'
