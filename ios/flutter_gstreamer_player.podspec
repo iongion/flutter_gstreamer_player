@@ -21,14 +21,16 @@ A new Flutter plugin project.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
   s.swift_version = '5.0'
 
-  s.frameworks = 'CoreFoundation', 'Foundation', 'AVFoundation', 'CoreMedia', 'CoreVideo', 'CoreAudio', 'AudioToolbox', 'OpenGLES', 'AssetsLibrary', 'QuartzCore', 'AssetsLibrary', 'VideoToolBox',       'Metal', 'IOSurface'
+  s.frameworks = 'CoreFoundation', 'Foundation', 'AVFoundation', 'CoreMedia', 'CoreVideo', 'CoreAudio', 'AudioToolbox', 'OpenGLES', 'AssetsLibrary', 'QuartzCore', 'AssetsLibrary', 'VideoToolBox', 'UIKit', 'libiconv.2.tbd','Metal', 'IOSurface'
   s.vendored_frameworks = 'GStreamer.framework'
+  s.ios.vendored_frameworks = 'GStreamer.framework'
   s.xcconfig              = {
     'HEADER_SEARCH_PATHS' => [
-        '"$(PWD)/GStreamer.framework/Headers"'
+        '"$(HOME)/Library/Developer/GStreamer/iPhone.sdk/GStreamer.framework/Headers"'
     ],
     'FRAMEWORK_SEARCH_PATHS' => [
-        '"/Library/Developer/GStreamer/iPhone.sdk"',
+        '"$(HOME)/Library/Developer/GStreamer/iPhone.sdk"',
+        '"$(SDKROOT)/System/Library/Frameworks"',
         '"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks"'
     ],
     'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES'
