@@ -21,8 +21,7 @@ A new Flutter plugin project.
   s.pod_target_xcconfig = { 'DEFINES_MODULE' => 'YES', 'EXCLUDED_ARCHS[sdk=iphonesimulator*]' => 'i386' }
   s.swift_version = '5.0'
 
-  s.frameworks = 'CoreFoundation', 'Foundation', 'AVFoundation', 'CoreMedia', 'CoreVideo', 'CoreAudio', 'AudioToolbox', 'OpenGLES', 'AssetsLibrary', 'QuartzCore', 'AssetsLibrary', 'VideoToolBox', 'UIKit', 'libiconv.2.tbd','Metal', 'IOSurface'
-  s.vendored_frameworks = 'GStreamer.framework'
+  s.frameworks = 'CoreFoundation', 'Foundation', 'AVFoundation', 'CoreMedia', 'CoreVideo', 'CoreAudio', 'AudioToolbox', 'OpenGLES', 'AssetsLibrary', 'QuartzCore', 'VideoToolBox', 'UIKit', 'Metal', 'IOSurface'
   s.xcconfig              = {
     'HEADER_SEARCH_PATHS' => [
         '"$(HOME)/Library/Developer/GStreamer/iPhone.sdk/GStreamer.framework/Headers"'
