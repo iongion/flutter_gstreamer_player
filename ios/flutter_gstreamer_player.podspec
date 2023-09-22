@@ -22,14 +22,14 @@ A new Flutter plugin project.
   s.swift_version = '5.0'
 
   s.frameworks = 'CoreFoundation', 'Foundation', 'AVFoundation', 'CoreMedia', 'CoreVideo', 'CoreAudio', 'AudioToolbox', 'OpenGLES', 'AssetsLibrary', 'QuartzCore', 'VideoToolBox', 'UIKit', 'Metal', 'IOSurface'
+  s.vendored_frameworks = 'GStreamer.framework'
   s.xcconfig              = {
     'HEADER_SEARCH_PATHS' => [
-        '"$(HOME)/Library/Developer/GStreamer/iPhone.sdk/GStreamer.framework/Headers"'
+        '"/Users/inanix/Library/Developer/GStreamer/iPhone.sdk/GStreamer.framework/Headers"'
     ],
     'FRAMEWORK_SEARCH_PATHS' => [
-        '"$(HOME)/Library/Developer/GStreamer/iPhone.sdk"',
-        '"$(SDKROOT)/System/Library/Frameworks"',
-        '"$(SYSTEM_APPS_DIR)/Xcode.app/Contents/Developer/Library/Frameworks"'
+        '"/Users/inanix/Library/Developer/GStreamer/iPhone.sdk"',
+        '"/Applications/Xcode.app/Contents/Developer/Library/Frameworks"'
     ],
     'CLANG_ALLOW_NON_MODULAR_INCLUDES_IN_FRAMEWORK_MODULES' => 'YES'
   }
