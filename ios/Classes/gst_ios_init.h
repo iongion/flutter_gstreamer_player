@@ -1,8 +1,8 @@
 #ifndef __GST_IOS_INIT_H__
 #define __GST_IOS_INIT_H__
 
+//CUSTOM gst_ios_init
 // #include <gst/gst.h>
-
 // G_BEGIN_DECLS
 
 #define GST_G_IO_MODULE_DECLARE(name) \
