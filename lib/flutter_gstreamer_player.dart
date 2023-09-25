@@ -5,7 +5,7 @@ import 'dart:io';
 import 'package:flutter/rendering.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_gif/flutter_gif.dart';
+// import 'package:flutter_gif/flutter_gif.dart';
 
 class GstPlayerTextureController {
   static const MethodChannel _channel =
@@ -55,15 +55,15 @@ class _GstPlayerState extends State<GstPlayer> with TickerProviderStateMixin {
   final _controller = GstPlayerTextureController();
   GlobalKey key = GlobalKey();
   bool isReceive = true;
-  late FlutterGifController controllerGif;
+  // late FlutterGifController controllerGif;
   @override
   void initState() {
     super.initState();
     initializeController();
     // udpreceive();
-    controllerGif = FlutterGifController(vsync: this);
-    controllerGif.repeat(
-        min: 0, max: 29, period: const Duration(milliseconds: 2500));
+    // controllerGif = FlutterGifController(vsync: this);
+    // controllerGif.repeat(
+    //     min: 0, max: 29, period: const Duration(milliseconds: 2500));
   }
 
   @override
