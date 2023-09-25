@@ -80,6 +80,7 @@ class _GstPlayerState extends State<GstPlayer> with TickerProviderStateMixin {
     if (Platform.isAndroid) {
       await _controller.versionAndroid();
     }
+    print("initializeController");
     setState(() {});
   }
 
@@ -112,14 +113,7 @@ class _GstPlayerState extends State<GstPlayer> with TickerProviderStateMixin {
       case TargetPlatform.android:
         return Container(
             child: isReceive
-                ? Stack(
-                    children: [
-                      Container(
-                        color: Colors.amber,
-                      ),
-                      Texture(key: key, textureId: _controller.textureId),
-                    ],
-                  )
+                ? Texture(key: key, textureId: _controller.textureId)
                 : Container(
                     color: Colors.amber,
                   )
@@ -133,13 +127,15 @@ class _GstPlayerState extends State<GstPlayer> with TickerProviderStateMixin {
             );
 
       case TargetPlatform.iOS:
+        print("print gstreamer ios");
         String viewType = _controller.textureId.toString();
         final Map<String, dynamic> creationParams = <String, dynamic>{};
         return UiKitView(
+          key: key,
           viewType: viewType,
           layoutDirection: TextDirection.ltr,
           creationParams: creationParams,
-          creationParamsCodec: const StandardMessageCodec(),
+          creationParamsCodec: StandardMessageCodec(),
         );
 
       default:
