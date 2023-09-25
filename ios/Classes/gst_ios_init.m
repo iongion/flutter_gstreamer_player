@@ -49,14 +49,18 @@ GST_PLUGIN_STATIC_DECLARE(rawparse);
 #if defined(GST_IOS_PLUGIN_TYPEFINDFUNCTIONS) || defined(GST_IOS_PLUGINS_CORE)
 GST_PLUGIN_STATIC_DECLARE(typefindfunctions);
 #endif
-#if defined(GST_IOS_PLUGIN_VIDEOCONVERT) || defined(GST_IOS_PLUGINS_CORE)
-GST_PLUGIN_STATIC_DECLARE(videoconvert);
+// REMOVE AND REPLACE
+// #if defined(GST_IOS_PLUGIN_VIDEOCONVERT) || defined(GST_IOS_PLUGINS_CORE)
+// GST_PLUGIN_STATIC_DECLARE(videoconvert);
+// #endif
+// #if defined(GST_IOS_PLUGIN_VIDEOSCALE) || defined(GST_IOS_PLUGINS_CORE)
+// GST_PLUGIN_STATIC_DECLARE(videoscale);
+// #endif
+#if defined(GST_IOS_PLUGIN_VIDEOCONVERTSCALE) || defined(GST_IOS_PLUGINS_CORE)
+GST_PLUGIN_STATIC_DECLARE(videoconvertscale);
 #endif
 #if defined(GST_IOS_PLUGIN_VIDEORATE) || defined(GST_IOS_PLUGINS_CORE)
 GST_PLUGIN_STATIC_DECLARE(videorate);
-#endif
-#if defined(GST_IOS_PLUGIN_VIDEOSCALE) || defined(GST_IOS_PLUGINS_CORE)
-GST_PLUGIN_STATIC_DECLARE(videoscale);
 #endif
 #if defined(GST_IOS_PLUGIN_VIDEOTESTSRC) || defined(GST_IOS_PLUGINS_CORE)
 GST_PLUGIN_STATIC_DECLARE(videotestsrc);
@@ -621,14 +625,18 @@ gst_ios_init (void)
 #if defined(GST_IOS_PLUGIN_TYPEFINDFUNCTIONS) || defined(GST_IOS_PLUGINS_CORE)
     GST_PLUGIN_STATIC_REGISTER(typefindfunctions);
 #endif
-#if defined(GST_IOS_PLUGIN_VIDEOCONVERT) || defined(GST_IOS_PLUGINS_CORE)
-    GST_PLUGIN_STATIC_REGISTER(videoconvert);
+// REMOVE AND REPLACE
+// #if defined(GST_IOS_PLUGIN_VIDEOCONVERT) || defined(GST_IOS_PLUGINS_CORE)
+//     GST_PLUGIN_STATIC_REGISTER(videoconvert);
+// #endif
+// #if defined(GST_IOS_PLUGIN_VIDEOSCALE) || defined(GST_IOS_PLUGINS_CORE)
+//     GST_PLUGIN_STATIC_REGISTER(videoscale);
+// #endif
+#if defined(GST_IOS_PLUGIN_VIDEOCONVERTSCALE) || defined(GST_IOS_PLUGINS_CORE)
+    GST_PLUGIN_STATIC_REGISTER(videoconvertscale);
 #endif
 #if defined(GST_IOS_PLUGIN_VIDEORATE) || defined(GST_IOS_PLUGINS_CORE)
     GST_PLUGIN_STATIC_REGISTER(videorate);
-#endif
-#if defined(GST_IOS_PLUGIN_VIDEOSCALE) || defined(GST_IOS_PLUGINS_CORE)
-    GST_PLUGIN_STATIC_REGISTER(videoscale);
 #endif
 #if defined(GST_IOS_PLUGIN_VIDEOTESTSRC) || defined(GST_IOS_PLUGINS_CORE)
     GST_PLUGIN_STATIC_REGISTER(videotestsrc);
