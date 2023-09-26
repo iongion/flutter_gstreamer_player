@@ -22,7 +22,6 @@ class GstPlayerTextureController {
     textureId = await _channel.invokeMethod('PlayerRegisterTexture', {
       'pipeline': pipeline,
       'playerId': GstPlayerTextureController._id,
-      'surface': 0,
     });
     print(textureId.toString());
     return textureId;
