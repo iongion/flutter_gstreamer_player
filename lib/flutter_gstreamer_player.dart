@@ -3,14 +3,13 @@
 import 'dart:async';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_gif/flutter_gif.dart';
 
 class GstPlayerTextureController {
   static const MethodChannel _channel =
       MethodChannel('flutter_gstreamer_player');
 
   int textureId = 0;
-  static const int _id = 0;
+  static int _id = 0;
 
   Future<int> initialize(String pipeline) async {
     // No idea why, but you have to increase `_id` first before pass it to method channel,
@@ -21,16 +20,7 @@ class GstPlayerTextureController {
       'pipeline': pipeline,
       'playerId': GstPlayerTextureController._id,
     });
-    print(textureId.toString());
     return textureId;
-  }
-
-  Future<String> versionAndroid() async {
-    String platformVersionAndroid = "";
-    platformVersionAndroid =
-        await _channel.invokeMethod('getPlatformVersion', {});
-    print("platformVersionAndroid $platformVersionAndroid");
-    return platformVersionAndroid;
   }
 
   Future<void> dispose() =>
@@ -53,22 +43,23 @@ class _GstPlayerState extends State<GstPlayer> with TickerProviderStateMixin {
   GlobalKey key = GlobalKey();
   @override
   void initState() {
-    super.initState();
     initializeController();
+    super.initState();
   }
 
   @override
   void didUpdateWidget(GstPlayer oldWidget) {
     if (widget.pipeline != oldWidget.pipeline) {
       initializeController();
-      print("pipeline: ${widget.pipeline}");
     }
     super.didUpdateWidget(oldWidget);
   }
 
-  Future<void> initializeController() async {
-    await _controller.initialize(widget.pipeline);
-    print("initializeController");
+  Future<Null> initializeController() async {
+    await _controller.initialize(
+      widget.pipeline,
+    );
+    print("pipeline: ${widget.pipeline}");
     setState(() {});
   }
 
@@ -79,23 +70,24 @@ class _GstPlayerState extends State<GstPlayer> with TickerProviderStateMixin {
     switch (currentPlatform) {
       case TargetPlatform.linux:
       case TargetPlatform.android:
+        print("gstreamer ANDROID textureId: ${_controller.textureId}");
         return Container(
           child: _controller.isInitialized
               ? Texture(textureId: _controller.textureId)
               : null,
         );
+        break;
       case TargetPlatform.iOS:
         String viewType = _controller.textureId.toString();
         final Map<String, dynamic> creationParams = <String, dynamic>{};
-        print("gstreamer ios viewType: $viewType , ");
+        print("gstreamer IOS textureId: ${_controller.textureId} ");
         return UiKitView(
-          key: key,
           viewType: viewType,
           layoutDirection: TextDirection.ltr,
           creationParams: creationParams,
           creationParamsCodec: const StandardMessageCodec(),
         );
-
+        break;
       default:
         throw UnsupportedError('Unsupported platform view');
     }
