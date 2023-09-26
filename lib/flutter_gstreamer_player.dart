@@ -1,6 +1,7 @@
 // ignore_for_file: unnecessary_null_comparison, must_be_immutable, avoid_print
 
 import 'dart:async';
+import 'dart:io';
 import 'package:flutter/services.dart';
 import 'package:flutter/material.dart';
 
@@ -65,19 +66,19 @@ class _GstPlayerState extends State<GstPlayer> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
-    var currentPlatform = Theme.of(context).platform;
+    var currentPlatform = Platform.operatingSystem;
 
     switch (currentPlatform) {
-      case TargetPlatform.linux:
-      case TargetPlatform.android:
+      case 'linux':
+      case 'android':
         print("gstreamer ANDROID textureId: ${_controller.textureId}");
         return Container(
           child: _controller.isInitialized
               ? Texture(textureId: _controller.textureId)
               : null,
         );
-        break;
-      case TargetPlatform.iOS:
+
+      case 'ios':
         String viewType = _controller.textureId.toString();
         final Map<String, dynamic> creationParams = <String, dynamic>{};
         print("gstreamer IOS textureId: ${_controller.textureId} ");
@@ -87,7 +88,6 @@ class _GstPlayerState extends State<GstPlayer> with TickerProviderStateMixin {
           creationParams: creationParams,
           creationParamsCodec: const StandardMessageCodec(),
         );
-        break;
       default:
         throw UnsupportedError('Unsupported platform view');
     }
