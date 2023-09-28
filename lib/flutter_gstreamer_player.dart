@@ -18,16 +18,20 @@ class GstPlayerTextureController {
     // if not, receiver of method channel always received 0
     if (currentPlatform == "ios") {
       GstPlayerTextureController._id = GstPlayerTextureController._id + 1;
+      print("GstPlayerTextureController.id +1");
     }
     textureId = await _channel.invokeMethod('PlayerRegisterTexture', {
       'pipeline': pipeline,
       'playerId': GstPlayerTextureController._id,
     });
+    print("initialize textureId: $textureId");
     return textureId;
   }
 
-  Future<void> dispose() =>
-      _channel.invokeMethod('dispose', {'textureId': textureId});
+  Future<void> dispose() async {
+    _channel.invokeMethod('dispose', {'textureId': textureId});
+    print("dispose");
+  }
 
   bool get isInitialized => textureId != null;
 }
@@ -41,24 +45,28 @@ class GstPlayer extends StatefulWidget {
   State<GstPlayer> createState() => _GstPlayerState();
 }
 
-class _GstPlayerState extends State<GstPlayer> with TickerProviderStateMixin {
+class _GstPlayerState extends State<GstPlayer> {
   final _controller = GstPlayerTextureController();
   GlobalKey key = GlobalKey();
   @override
   void initState() {
     initializeController();
+    print("FIRST initializeController");
     super.initState();
   }
 
   @override
   void didUpdateWidget(GstPlayer oldWidget) {
+    print("didUpdateWidget");
     if (widget.pipeline != oldWidget.pipeline) {
+      print("widget.pipeline != oldwidget.pipeline");
       initializeController();
     }
     super.didUpdateWidget(oldWidget);
   }
 
   Future<Null> initializeController() async {
+    print("initializeController");
     if (_controller.isInitialized) {
       await _controller.dispose();
     }
