@@ -59,6 +59,9 @@ class _GstPlayerState extends State<GstPlayer> with TickerProviderStateMixin {
   }
 
   Future<Null> initializeController() async {
+    if (_controller.isInitialized) {
+      await _controller.dispose();
+    }
     await _controller.initialize(
       widget.pipeline,
     );
