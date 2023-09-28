@@ -66,6 +66,11 @@ class _GstPlayerState extends State<GstPlayer> with TickerProviderStateMixin {
     setState(() {});
   }
 
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
   @override
   Widget build(BuildContext context) {
     var currentPlatform = Platform.operatingSystem;
