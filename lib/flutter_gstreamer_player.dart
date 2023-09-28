@@ -9,14 +9,16 @@ class GstPlayerTextureController {
   static const MethodChannel _channel =
       MethodChannel('flutter_gstreamer_player');
 
+  var currentPlatform = Platform.operatingSystem;
   int textureId = 0;
   static int _id = 0;
 
   Future<int> initialize(String pipeline) async {
     // No idea why, but you have to increase `_id` first before pass it to method channel,
     // if not, receiver of method channel always received 0
-
-    // GstPlayerTextureController._id = GstPlayerTextureController._id + 1;
+    if (currentPlatform == "ios") {
+      GstPlayerTextureController._id = GstPlayerTextureController._id + 1;
+    }
     textureId = await _channel.invokeMethod('PlayerRegisterTexture', {
       'pipeline': pipeline,
       'playerId': GstPlayerTextureController._id,
