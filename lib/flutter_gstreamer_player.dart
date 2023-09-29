@@ -67,9 +67,9 @@ class _GstPlayerState extends State<GstPlayer> {
 
   Future<Null> initializeController() async {
     print("initializeController");
-    // if (_controller.isInitialized) {
-    //   await _controller.dispose();
-    // }
+    if (_controller.isInitialized) {
+      await _controller.dispose();
+    }
     await _controller.initialize(
       widget.pipeline,
     );
