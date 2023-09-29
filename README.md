@@ -2,10 +2,6 @@
 
 A GStreamer-powered alternative to Flutter's video_player that support Linux, iOS and Android.
 
-![](doc/screenshot.png)
-
-<a href="https://www.buymeacoffee.com/phongnh36a" target="_blank"><img src="https://cdn.buymeacoffee.com/buttons/default-orange.png" alt="Buy Me A Coffee" height="41" width="174"></a>
-
 ## Installation
 
 ### Linux
@@ -21,6 +17,21 @@ Link GStreamer framework to `ios` directory for flutter's ios build system.
 ```
 ln -s /Users/<Your_User_Name>/Library/Developer/GStreamer/iPhone.sdk/GStreamer.framework ios/GStreamer.framework
 ```
+
+**Modify the flutter_gstreamer_player.podspec file:**
+
+You'll need to open the flutter_gstreamer_player.podspec file located in the ios folder of your dependency. In this file, you should update the values of the following keys:
+
+- Replace the value of **"HEADER_SEARCH_PATHS"** with the path to the header file in the **GStreamer.framework** folder.
+- Replace the value of **"FRAMEWORK_SEARCH_PATHS"** with the path to the **iPhone.sdk** folder
+- include the path to the Xcode frameworks.
+
+**Access to xcworkspace file with Xcode , and modify the "flutter_gstreamer_player" target:**
+
+Open your Flutter project in Xcode. To access the "flutter_gstreamer_player" target, follow these steps:
+
+- Go to the **"Build Phases"** tab.
+- Then, in the **"Link Binary With Libraries"** section, you'll need to add GStreamer.framework to the list of frameworks and libraries used in your project.
 
 ### Android
 
