@@ -46,6 +46,7 @@ class GstPlayer extends StatefulWidget {
 }
 
 class _GstPlayerState extends State<GstPlayer> {
+  var currentPlatform = Platform.operatingSystem;
   final _controller = GstPlayerTextureController();
   GlobalKey key = GlobalKey();
   @override
@@ -67,7 +68,7 @@ class _GstPlayerState extends State<GstPlayer> {
 
   Future<Null> initializeController() async {
     print("initializeController");
-    if (_controller.isInitialized) {
+    if (_controller.isInitialized && currentPlatform == "ios") {
       await _controller.dispose();
     }
     await _controller.initialize(
@@ -84,8 +85,6 @@ class _GstPlayerState extends State<GstPlayer> {
 
   @override
   Widget build(BuildContext context) {
-    var currentPlatform = Platform.operatingSystem;
-
     switch (currentPlatform) {
       case 'linux':
       case 'android':

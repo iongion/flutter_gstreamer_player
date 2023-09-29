@@ -118,6 +118,9 @@ public class SwiftFlutterGstreamerPlayerPlugin: NSObject, FlutterPlugin {
       case "getPlatformVersion":
         result("iOS " + UIDevice.current.systemVersion)
         break
+      case "dispose":
+        dealloc()
+        break
       case "PlayerRegisterTexture":
         guard let args = call.arguments as? [String : Any] else {
           result(" arguments error.... ")
