@@ -16,10 +16,10 @@ class GstPlayerTextureController {
   Future<int> initialize(String pipeline) async {
     // No idea why, but you have to increase `_id` first before pass it to method channel,
     // if not, receiver of method channel always received 0
-    // if (currentPlatform == "ios") {
-    //   GstPlayerTextureController._id = GstPlayerTextureController._id + 1;
-    // print("GstPlayerTextureController.id +1");
-    // }
+    if (currentPlatform == "ios") {
+      GstPlayerTextureController._id = GstPlayerTextureController._id + 1;
+      print("GstPlayerTextureController.id +1");
+    }
     textureId = await _channel.invokeMethod('PlayerRegisterTexture', {
       'pipeline': pipeline,
       'playerId': GstPlayerTextureController._id,
@@ -67,9 +67,9 @@ class _GstPlayerState extends State<GstPlayer> {
 
   Future<Null> initializeController() async {
     print("initializeController");
-    if (_controller.isInitialized) {
-      await _controller.dispose();
-    }
+    // if (_controller.isInitialized) {
+    //   await _controller.dispose();
+    // }
     await _controller.initialize(
       widget.pipeline,
     );
