@@ -29,8 +29,9 @@ class GstPlayerTextureController {
   }
 
   Future<void> dispose() async {
-    _channel.invokeMethod('dispose', {'textureId': textureId});
-    print("dispose");
+    String result;
+    result = await _channel.invokeMethod('dispose', {'textureId': textureId});
+    print("dispose : $result");
   }
 
   bool get isInitialized => textureId != null;
@@ -68,7 +69,7 @@ class _GstPlayerState extends State<GstPlayer> {
 
   Future<Null> initializeController() async {
     print("initializeController");
-    if (_controller.isInitialized && currentPlatform == "ios") {
+    if (_controller.isInitialized) {
       await _controller.dispose();
     }
     await _controller.initialize(

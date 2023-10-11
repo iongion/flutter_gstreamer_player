@@ -125,8 +125,9 @@ public class SwiftFlutterGstreamerPlayerPlugin: NSObject, FlutterPlugin {
                 // Call the dealloc method to clean up GStreamer resources
                 backend.dealloc()
                 gstreamerBackend = nil
+                result("Disposed GStreamerBackend")
             }
-            result("Disposed GStreamerBackend")
+            result("Dispose failed")
         break
       case "PlayerRegisterTexture":
         guard let args = call.arguments as? [String : Any] else {
