@@ -17,9 +17,8 @@ class GstPlayerTextureController {
     // No idea why, but you have to increase `_id` first before pass it to method channel,
     // if not, receiver of method channel always received 0
     // if (currentPlatform == "ios") {
-    // GstPlayerTextureController._id = GstPlayerTextureController._id + 1;
-    GstPlayerTextureController._id = 1;
-    print("GstPlayerTextureController.id");
+    GstPlayerTextureController._id = GstPlayerTextureController._id + 1;
+    print("GstPlayerTextureController.id +1");
     // }
     textureId = await _channel.invokeMethod('PlayerRegisterTexture', {
       'pipeline': pipeline,
@@ -97,11 +96,10 @@ class _GstPlayerState extends State<GstPlayer> {
         );
 
       case 'ios':
-        String viewType = _controller.textureId.toString();
         final Map<String, dynamic> creationParams = <String, dynamic>{};
         print("gstreamer IOS textureId: ${_controller.textureId} ");
         return UiKitView(
-          viewType: viewType,
+          viewType: _controller.textureId.toString(),
           layoutDirection: TextDirection.ltr,
           creationParams: creationParams,
           creationParamsCodec: const StandardMessageCodec(),

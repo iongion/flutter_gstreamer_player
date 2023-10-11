@@ -99,9 +99,10 @@ class FLNativeView: NSObject, FlutterPlatformView {
 
 public class SwiftFlutterGstreamerPlayerPlugin: NSObject, FlutterPlugin {
 
+  
   static var registrar: FlutterPluginRegistrar? = nil;
   /* static var factory: FLNativeViewFactory? = nil; */
-
+  var gstreamerBackend: GStreamerBackend?
   public static func register(with registrar: FlutterPluginRegistrar) {
     let channel = FlutterMethodChannel(name: "flutter_gstreamer_player", binaryMessenger: registrar.messenger())
     let instance = SwiftFlutterGstreamerPlayerPlugin()
@@ -119,7 +120,13 @@ public class SwiftFlutterGstreamerPlayerPlugin: NSObject, FlutterPlugin {
         result("iOS " + UIDevice.current.systemVersion)
         break
       case "dispose":
-        dealloc()
+        // Ensure you have a reference to the GStreamerBackend
+            if let backend = gstreamerBackend {
+                // Call the dealloc method to clean up GStreamer resources
+                backend.dealloc()
+                gstreamerBackend = nil
+            }
+            result("Disposed GStreamerBackend")
         break
       case "PlayerRegisterTexture":
         guard let args = call.arguments as? [String : Any] else {
