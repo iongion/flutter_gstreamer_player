@@ -18,6 +18,7 @@ class GstPlayerTextureController {
     // if not, receiver of method channel always received 0
     // if (currentPlatform == "ios") {
     // GstPlayerTextureController._id = GstPlayerTextureController._id + 1;
+    GstPlayerTextureController._id = 1;
     print("GstPlayerTextureController.id");
     // }
     textureId = await _channel.invokeMethod('PlayerRegisterTexture', {
