@@ -56,8 +56,8 @@ class FLNativeView: NSObject, FlutterPlatformView {
   ) {
     // renvoie l'instance de _view, qui sera utilisée comme vue native
     _view = UIView()
-      /*
     print("[FLNativeView] viewId: " + String(viewId))
+      /*
     switch (viewId) {
       case 0:
         //_pipeline = "videotestsrc pattern=smpte ! warptv ! videoconvert ! autovideosink"
@@ -90,12 +90,11 @@ class FLNativeView: NSObject, FlutterPlatformView {
         break
     }
     */
-    _gStreamerBackend.dealloc()
-    result("dealloc on FLNativeViewFactory")
+    print("dealloc on FLNativeViewFactory")
     _gStreamerBackend = GStreamerBackend(
       pipeline,
       videoView: _view)
-    result("innit _gStreamerBackend on FLNativeViewFactory")
+    print("innit _gStreamerBackend on FLNativeViewFactory")
     super.init()
     // iOS views can be created here
     //createNativeView(view: _view)
