@@ -91,10 +91,11 @@ class FLNativeView: NSObject, FlutterPlatformView {
     }
     */
     _gStreamerBackend.dealloc()
+    result("dealloc on FLNativeViewFactory")
     _gStreamerBackend = GStreamerBackend(
       pipeline,
       videoView: _view)
-
+    result("innit _gStreamerBackend on FLNativeViewFactory")
     super.init()
     // iOS views can be created here
     //createNativeView(view: _view)
