@@ -17,7 +17,7 @@ class GstPlayerTextureController {
     // No idea why, but you have to increase `_id` first before pass it to method channel,
     // if not, receiver of method channel always received 0
     // if (currentPlatform == "ios") {
-    GstPlayerTextureController._id = GstPlayerTextureController._id + 1;
+    // GstPlayerTextureController._id = GstPlayerTextureController._id + 1;
     print("GstPlayerTextureController.id +1");
     // }
     textureId = await _channel.invokeMethod('PlayerRegisterTexture', {

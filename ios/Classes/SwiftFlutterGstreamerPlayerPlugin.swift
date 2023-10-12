@@ -28,7 +28,7 @@ class FLNativeViewFactory: NSObject, FlutterPlatformViewFactory {
       viewIdentifier: viewId,
       arguments: args,
       binaryMessenger: messenger,
-      pipeline: self.pipeline)
+      pipeline: pipeline)
   }
 }
 
@@ -39,6 +39,7 @@ class FLNativeView: NSObject, FlutterPlatformView {
   private var _view: UIView
   // _gStreamerBackend: Une instance de GStreamerBackend, qui semble être utilisée pour gérer la lecture de flux vidéo, avec un pipeline défini dans les commentaires.
   private var _gStreamerBackend: GStreamerBackend
+
 
   // constructeur
   // frame: la taille de la vue
@@ -89,6 +90,7 @@ class FLNativeView: NSObject, FlutterPlatformView {
         break
     }
     */
+    _gStreamerBackend.dealloc()
     _gStreamerBackend = GStreamerBackend(
       pipeline,
       videoView: _view)
@@ -144,22 +146,7 @@ public class SwiftFlutterGstreamerPlayerPlugin: NSObject, FlutterPlugin {
         result("iOS " + UIDevice.current.systemVersion)
         break
       case "dispose":
-            // Utilisez une instruction `guard` pour vérifier la validité des arguments et la présence du backend GStreamer
-            // Si les arguments ne sont pas valides ou s'il manque le backend GStreamer, la méthode s'arrête et renvoie un message d'erreur
-            guard let args = call.arguments as? [String : Any],
-                  let viewId = args["viewId"] as? Int64,
-                  let registrar = SwiftFlutterGstreamerPlayerPlugin.registrar as? FlutterPluginRegistrar,
-                  let backend = gstreamerBackend else {
-                result("Dispose failed: Invalid arguments or missing GStreamer backend")
-                return
-            }
-            // Dispose de la vue native associée à l'identifiant
-            registrar.unregister(viewId)
-            // Dispose du backend GStreamer correspondant
-            backend.dealloc()
-            gstreamerBackend = nil
-            // Renvoie un message de succès indiquant que la vue et le backend ont été correctement disposés
-            result("Disposed view with ID: \(viewId) and its GStreamer backend")
+            result("Dispose moethod not implemented")
         break
       case "PlayerRegisterTexture":
         guard let args = call.arguments as? [String : Any] else {
@@ -175,6 +162,7 @@ public class SwiftFlutterGstreamerPlayerPlugin: NSObject, FlutterPlugin {
         }
 
         var factory = FLNativeViewFactory(messenger: registrar.messenger(), pipeline: pipeline)
+       
         registrar.register(factory, withId: String(playerId))
 
         result(playerId)
