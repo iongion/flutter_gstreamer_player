@@ -30,6 +30,11 @@ class FLNativeViewFactory: NSObject, FlutterPlatformViewFactory {
       binaryMessenger: messenger,
       pipeline: pipeline)
   }
+
+    /// Implementing this method is only necessary when the `arguments` in `createWithFrame` is not `nil`.
+    public func createArgsCodec() -> FlutterMessageCodec & NSObjectProtocol {
+          return FlutterStandardMessageCodec.sharedInstance()
+    }
 }
 
 // class FLNativeView, sous classe: NSObject , implémente le prototcole: FlutterPlatformView
@@ -56,8 +61,8 @@ class FLNativeView: NSObject, FlutterPlatformView {
   ) {
     // renvoie l'instance de _view, qui sera utilisée comme vue native
     _view = UIView()
-    print("[FLNativeView] viewId: " + String(viewId))
       /*
+    print("[FLNativeView] viewId: " + String(viewId))
     switch (viewId) {
       case 0:
         //_pipeline = "videotestsrc pattern=smpte ! warptv ! videoconvert ! autovideosink"
@@ -90,14 +95,12 @@ class FLNativeView: NSObject, FlutterPlatformView {
         break
     }
     */
-    print("dealloc on FLNativeViewFactory")
     _gStreamerBackend = GStreamerBackend(
       pipeline,
       videoView: _view)
-    print("innit _gStreamerBackend on FLNativeViewFactory")
     super.init()
     // iOS views can be created here
-    //createNativeView(view: _view)
+    createNativeView(view: _view)
   }
 
   func view() -> UIView {
@@ -106,9 +109,9 @@ class FLNativeView: NSObject, FlutterPlatformView {
 
   // personnaliser la vue native en ajoutant un label de texte à la vue
   func createNativeView(view _view: UIView){
-    _view.backgroundColor = UIColor.blue
+    _view.backgroundColor = UIColor.red
     let nativeLabel = UILabel()
-    nativeLabel.text = "Native text from iOS: " + String("")
+    nativeLabel.text = "Native text from iOS: INANIX"
     nativeLabel.textColor = UIColor.white
     nativeLabel.textAlignment = .center
     nativeLabel.frame = CGRect(x: 0, y: 0, width: 180, height: 48.0)
@@ -146,7 +149,7 @@ public class SwiftFlutterGstreamerPlayerPlugin: NSObject, FlutterPlugin {
         result("iOS " + UIDevice.current.systemVersion)
         break
       case "dispose":
-            result("Dispose moethod not implemented")
+            result("Dispose methode not implemented")
         break
       case "PlayerRegisterTexture":
         guard let args = call.arguments as? [String : Any] else {
@@ -161,7 +164,7 @@ public class SwiftFlutterGstreamerPlayerPlugin: NSObject, FlutterPlugin {
           return
         }
 
-        var factory = FLNativeViewFactory(messenger: registrar.messenger(), pipeline: pipeline)
+        let  factory = FLNativeViewFactory(messenger: registrar.messenger(), pipeline: pipeline)
        
         registrar.register(factory, withId: String(playerId))
 

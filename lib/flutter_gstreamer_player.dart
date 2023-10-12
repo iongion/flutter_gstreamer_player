@@ -34,7 +34,7 @@ class GstPlayerTextureController {
     print("dispose : $result");
   }
 
-  bool get isInitialized => textureId != null;
+  bool get isInitialized => textureId != 0;
 }
 
 class GstPlayer extends StatefulWidget {
@@ -69,9 +69,6 @@ class _GstPlayerState extends State<GstPlayer> {
 
   Future<Null> initializeController() async {
     print("initializeController");
-    if (_controller.isInitialized) {
-      await _controller.dispose();
-    }
     await _controller.initialize(widget.pipeline);
     print("pipeline: ${widget.pipeline}");
     setState(() {});
@@ -97,12 +94,16 @@ class _GstPlayerState extends State<GstPlayer> {
 
       case 'ios':
         final Map<String, dynamic> creationParams = <String, dynamic>{};
-        print("gstreamer IOS textureId: ${_controller.textureId} ");
-        return UiKitView(
-          viewType: _controller.textureId.toString(),
-          layoutDirection: TextDirection.ltr,
-          creationParams: creationParams,
-          creationParamsCodec: const StandardMessageCodec(),
+        print("on build textureId: ${_controller.textureId} ");
+        return Container(
+          child: _controller.isInitialized
+              ? UiKitView(
+                  viewType: _controller.textureId.toString(),
+                  layoutDirection: TextDirection.ltr,
+                  creationParams: creationParams,
+                  creationParamsCodec: const StandardMessageCodec(),
+                )
+              : null,
         );
       default:
         throw UnsupportedError('Unsupported platform view');
