@@ -1,21 +1,28 @@
 import Flutter
 import UIKit
 
+// class CFLNativeViewFactory, sous classe: NSObject , implémente le prototcole: FlutterPlatformViewFactory
 class FLNativeViewFactory: NSObject, FlutterPlatformViewFactory {
+  // propriétés de la classe
   private var messenger: FlutterBinaryMessenger
   private var pipeline: String
-
+  
+  // constructeur
   init(messenger: FlutterBinaryMessenger, pipeline: String) {
     self.messenger = messenger
     self.pipeline = pipeline
     super.init()
   }
 
+  // frame: un rectangle qui définit la taille et la position de la vue native.
+  // viewId: un identifiant unique pour la vue.
+  // args: des arguments qui peuvent être utilisés pour personnaliser la vue native.
   func create(
       withFrame frame: CGRect,
       viewIdentifier viewId: Int64,
       arguments args: Any?
   ) -> FlutterPlatformView {
+  // retourne la vue native avec les parametre frame,viewId,args,messenger,pipeline
     return FLNativeView(
       frame: frame,
       viewIdentifier: viewId,
@@ -25,11 +32,20 @@ class FLNativeViewFactory: NSObject, FlutterPlatformViewFactory {
   }
 }
 
+// class FLNativeView, sous classe: NSObject , implémente le prototcole: FlutterPlatformView
 class FLNativeView: NSObject, FlutterPlatformView {
+  // propriétés de la classe
+  // _view: Une instance de UIView qui sera utilisée pour afficher le contenu de la vue native.
   private var _view: UIView
-  //private var _pipeline: String = ""
+  // _gStreamerBackend: Une instance de GStreamerBackend, qui semble être utilisée pour gérer la lecture de flux vidéo, avec un pipeline défini dans les commentaires.
   private var _gStreamerBackend: GStreamerBackend
 
+  // constructeur
+  // frame: la taille de la vue
+  // viewId: l'identifiant de la vue
+  // args: arguments optionnels
+  // messenger: messager binaire Flutter
+  // pipeline: pipeline de GStreamer
   init(
       frame: CGRect,
       viewIdentifier viewId: Int64,
@@ -37,9 +53,9 @@ class FLNativeView: NSObject, FlutterPlatformView {
       binaryMessenger messenger: FlutterBinaryMessenger?,
       pipeline pipeline: String
   ) {
+    // renvoie l'instance de _view, qui sera utilisée comme vue native
     _view = UIView()
-
-    /*
+      /*
     print("[FLNativeView] viewId: " + String(viewId))
     switch (viewId) {
       case 0:
@@ -86,6 +102,7 @@ class FLNativeView: NSObject, FlutterPlatformView {
     return _view
   }
 
+  // personnaliser la vue native en ajoutant un label de texte à la vue
   func createNativeView(view _view: UIView){
     _view.backgroundColor = UIColor.blue
     let nativeLabel = UILabel()
@@ -96,22 +113,29 @@ class FLNativeView: NSObject, FlutterPlatformView {
     _view.addSubview(nativeLabel)
   }
 }
-
+// class SwiftFlutterGstreamerPlayerPlugin, sous classe: NSObject , implémente le prototcole: FlutterPlugin
 public class SwiftFlutterGstreamerPlayerPlugin: NSObject, FlutterPlugin {
 
-  
+  // propriétés de la classe
+  // registrar: est définie pour stocker l'instance du registraire de plugin Flutter
+  //  Le registraire est utilisé pour enregistrer des factories et gérer les canaux de communication Flutter.
   static var registrar: FlutterPluginRegistrar? = nil;
-  /* static var factory: FLNativeViewFactory? = nil; */
+  // gstreamerBackend: est utilisée pour stocker une instance de GStreamerBackend
   var gstreamerBackend: GStreamerBackend?
+
+  // methode register
+  // appelée lors de l'enregistrement du plugin dans Flutter
   public static func register(with registrar: FlutterPluginRegistrar) {
+    // channel: canal de méthode Flutter
     let channel = FlutterMethodChannel(name: "flutter_gstreamer_player", binaryMessenger: registrar.messenger())
     let instance = SwiftFlutterGstreamerPlayerPlugin()
     registrar.addMethodCallDelegate(instance, channel: channel)
 
+    // initialise des composants liés à GStreamer
     gst_ios_init()
 
+    // registrar est mise à jour avec l'instance du registraire Flutter
     SwiftFlutterGstreamerPlayerPlugin.registrar = registrar
-    /* SwiftFlutterGstreamerPlayerPlugin.factory = factory */
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -120,14 +144,22 @@ public class SwiftFlutterGstreamerPlayerPlugin: NSObject, FlutterPlugin {
         result("iOS " + UIDevice.current.systemVersion)
         break
       case "dispose":
-        // Ensure you have a reference to the GStreamerBackend
-            if let backend = gstreamerBackend {
-                // Call the dealloc method to clean up GStreamer resources
-                backend.dealloc()
-                gstreamerBackend = nil
-                result("Disposed GStreamerBackend")
+            // Utilisez une instruction `guard` pour vérifier la validité des arguments et la présence du backend GStreamer
+            // Si les arguments ne sont pas valides ou s'il manque le backend GStreamer, la méthode s'arrête et renvoie un message d'erreur
+            guard let args = call.arguments as? [String : Any],
+                  let viewId = args["viewId"] as? Int64,
+                  let registrar = SwiftFlutterGstreamerPlayerPlugin.registrar as? FlutterPluginRegistrar,
+                  let backend = gstreamerBackend else {
+                result("Dispose failed: Invalid arguments or missing GStreamer backend")
+                return
             }
-            result("Dispose failed")
+            // Dispose de la vue native associée à l'identifiant
+            registrar.unregister(viewId)
+            // Dispose du backend GStreamer correspondant
+            backend.dealloc()
+            gstreamerBackend = nil
+            // Renvoie un message de succès indiquant que la vue et le backend ont été correctement disposés
+            result("Disposed view with ID: \(viewId) and its GStreamer backend")
         break
       case "PlayerRegisterTexture":
         guard let args = call.arguments as? [String : Any] else {
@@ -137,10 +169,6 @@ public class SwiftFlutterGstreamerPlayerPlugin: NSObject, FlutterPlugin {
         let pipeline = args["pipeline"] as! String;
         let playerId = args["playerId"] as! Int64;
 
-        /* guard let factory = SwiftFlutterGstreamerPlayerPlugin.factory as? FLNativeViewFactory else { */
-        /*   print("Internal plugin error: factory does not initialized") */
-        /*   return */
-        /* } */
         guard let registrar = SwiftFlutterGstreamerPlayerPlugin.registrar as? FlutterPluginRegistrar else {
           print("Internal plugin error: registrar does not initialized")
           return

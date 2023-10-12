@@ -30,7 +30,7 @@ class GstPlayerTextureController {
 
   Future<void> dispose() async {
     String result;
-    result = await _channel.invokeMethod('dispose', {'textureId': textureId});
+    result = await _channel.invokeMethod('dispose', {'viewId': textureId});
     print("dispose : $result");
   }
 
@@ -72,13 +72,12 @@ class _GstPlayerState extends State<GstPlayer> {
     if (_controller.isInitialized) {
       await _controller.dispose();
     }
-    await _controller.initialize(
-      widget.pipeline,
-    );
+    await _controller.initialize(widget.pipeline);
     print("pipeline: ${widget.pipeline}");
     setState(() {});
   }
 
+  @override
   void dispose() {
     _controller.dispose();
     super.dispose();
