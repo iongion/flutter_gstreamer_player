@@ -11,7 +11,7 @@ class GstPlayerTextureController {
 
   var currentPlatform = Platform.operatingSystem;
   int textureId = 0;
-  static int _id = 0;
+  static int _id = 1;
 
   Future<int> initialize(String pipeline) async {
     // No idea why, but you have to increase `_id` first before pass it to method channel,
