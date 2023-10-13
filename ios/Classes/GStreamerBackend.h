@@ -10,6 +10,8 @@
 
 -(void) dealloc;
 
+- (void) updatePipeline:(NSString *) newPipelineDescription;
+
 @end
 
 #endif

@@ -41,6 +41,29 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
     return self;
 }
 
+- (void) updatePipeline:(NSString *) newPipelineDescription {
+    /* Assurez-vous que le pipeline est dans un état approprié pour être mis à jour. */
+    GstState currentPipelineState;
+    gst_element_get_state(self->pipeline, &currentPipelineState, NULL, GST_CLOCK_TIME_NONE);
+
+    if (currentPipelineState == GST_STATE_PLAYING) {
+        gst_element_set_state(self->pipeline, GST_STATE_PAUSED);
+    }
+
+    /* Arrêtez le pipeline actuel */
+    gst_element_set_state(self->pipeline, GST_STATE_NULL);
+    gst_object_unref(self->pipeline);
+
+    /* Créez et configurez un nouveau pipeline avec la nouvelle description */
+    [self setupPipeline:[newPipelineDescription UTF8String]];
+
+    /* Redémarrez le pipeline si nécessaire */
+    if (currentPipelineState == GST_STATE_PLAYING) {
+        gst_element_set_state(self->pipeline, GST_STATE_PLAYING);
+    }
+}
+
+
 -(void) dealloc
 {
     if (pipeline) {
