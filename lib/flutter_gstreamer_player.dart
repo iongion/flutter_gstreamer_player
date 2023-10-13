@@ -17,7 +17,7 @@ class GstPlayerTextureController {
     // No idea why, but you have to increase `_id` first before pass it to method channel,
     // if not, receiver of method channel always received 0
     // if (currentPlatform == "ios") {
-    // GstPlayerTextureController._id = GstPlayerTextureController._id + 1;
+    GstPlayerTextureController._id = GstPlayerTextureController._id + 1;
     print("GstPlayerTextureController.id = ${_id}");
     // }
     textureId = await _channel.invokeMethod('PlayerRegisterTexture', {
@@ -26,12 +26,6 @@ class GstPlayerTextureController {
     });
     print("initialize textureId: $textureId");
     return textureId;
-  }
-
-  Future<void> dispose() async {
-    String result;
-    result = await _channel.invokeMethod('dispose', {'viewId': textureId});
-    print("dispose : $result");
   }
 
   bool get isInitialized => textureId != 0;
@@ -76,7 +70,6 @@ class _GstPlayerState extends State<GstPlayer> {
 
   @override
   void dispose() {
-    _controller.dispose();
     super.dispose();
   }
 

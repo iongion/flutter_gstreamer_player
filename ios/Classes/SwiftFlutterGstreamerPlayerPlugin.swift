@@ -1,5 +1,6 @@
 import Flutter
 import UIKit
+var _gStreamerBackend: GStreamerBackend = nil;
 
 class FLNativeViewFactory: NSObject, FlutterPlatformViewFactory {
   private var messenger: FlutterBinaryMessenger
@@ -27,8 +28,6 @@ class FLNativeViewFactory: NSObject, FlutterPlatformViewFactory {
 
 class FLNativeView: NSObject, FlutterPlatformView {
   private var _view: UIView
-  //private var _pipeline: String = ""
-  private var _gStreamerBackend: GStreamerBackend
 
   init(
       frame: CGRect,
@@ -38,17 +37,14 @@ class FLNativeView: NSObject, FlutterPlatformView {
       pipeline pipeline: String
   ) {
     _view = UIView()
-
     _gStreamerBackend = GStreamerBackend(
       pipeline,
       videoView: _view)
 
     super.init()
+    // iOS views can be created here
+    //createNativeView(view: _view)
   }
-
-  func updatePipeline(_ newPipeline: String) {
-        _gStreamerBackend.updatePipeline(newPipeline)
-    }
 
   func view() -> UIView {
     return _view
@@ -78,7 +74,6 @@ public class SwiftFlutterGstreamerPlayerPlugin: NSObject, FlutterPlugin {
     gst_ios_init()
 
     SwiftFlutterGstreamerPlayerPlugin.registrar = registrar
-    /* SwiftFlutterGstreamerPlayerPlugin.factory = factory */
   }
 
   public func handle(_ call: FlutterMethodCall, result: @escaping FlutterResult) {
@@ -87,31 +82,30 @@ public class SwiftFlutterGstreamerPlayerPlugin: NSObject, FlutterPlugin {
         result("iOS " + UIDevice.current.systemVersion)
         break
       case "PlayerRegisterTexture":
-    guard let args = call.arguments as? [String: Any] else {
-        result("Arguments error...")
-        return
-    }
-    let pipeline = args["pipeline"] as! String
-    let playerId = args["playerId"] as! Int64
+        guard let args = call.arguments as? [String : Any] else {
+          result(" arguments error.... ")
+          return
+        }
+        let pipeline = args["pipeline"] as! String;
+        let playerId = args["playerId"] as! Int64;
 
-    guard let registrar = SwiftFlutterGstreamerPlayerPlugin.registrar as? FlutterPluginRegistrar else {
-        print("Internal plugin error: registrar does not initialized")
-        return
-    }
+        /* guard let factory = SwiftFlutterGstreamerPlayerPlugin.factory as? FLNativeViewFactory else { */
+        /*   print("Internal plugin error: factory does not initialized") */
+        /*   return */
+        /* } */
+        guard let registrar = SwiftFlutterGstreamerPlayerPlugin.registrar as? FlutterPluginRegistrar else {
+          print("Internal plugin error: registrar does not initialized")
+          return
+        }
+        if (_gStreamerBackend.pipeline != pipeline) {
+            _gStreamerBackend.dealloc()
+        }
 
-    // Vérifiez si la vue native existe déjà
-    if let existingView = registrar.view(withIdentifier: String(playerId)) as? FLNativeView {
-        // La vue native existe déjà, mettez à jour le pipeline
-        existingView.updatePipeline(pipeline)
-        result(playerId)
-    } else {
-        // La vue native n'existe pas, créez-la
-        let factory = FLNativeViewFactory(messenger: registrar.messenger(), pipeline: pipeline)
+        var factory = FLNativeViewFactory(messenger: registrar.messenger(), pipeline: pipeline)
         registrar.register(factory, withId: String(playerId))
-        result(playerId)
-    }
-    break
 
+        result(playerId)
+        break
       default:
         result(FlutterMethodNotImplemented)
         break
