@@ -1,7 +1,8 @@
 import Flutter
 import UIKit
-var _gStreamerBackend: GStreamerBackend = nil;
-
+struct MyVariables {
+    static var _gStreamerBackend: GStreamerBackend?;
+}
 class FLNativeViewFactory: NSObject, FlutterPlatformViewFactory {
   private var messenger: FlutterBinaryMessenger
   private var pipeline: String
@@ -37,7 +38,7 @@ class FLNativeView: NSObject, FlutterPlatformView {
       pipeline pipeline: String
   ) {
     _view = UIView()
-    _gStreamerBackend = GStreamerBackend(
+      MyVariables._gStreamerBackend = GStreamerBackend(
       pipeline,
       videoView: _view)
 
@@ -62,7 +63,7 @@ class FLNativeView: NSObject, FlutterPlatformView {
 }
 
 public class SwiftFlutterGstreamerPlayerPlugin: NSObject, FlutterPlugin {
-
+    static var isInit = false;
   static var registrar: FlutterPluginRegistrar? = nil;
   /* static var factory: FLNativeViewFactory? = nil; */
 
@@ -97,13 +98,14 @@ public class SwiftFlutterGstreamerPlayerPlugin: NSObject, FlutterPlugin {
           print("Internal plugin error: registrar does not initialized")
           return
         }
-        if (_gStreamerBackend.pipeline != pipeline) {
-            _gStreamerBackend.dealloc()
+        if(SwiftFlutterGstreamerPlayerPlugin.isInit){
+            MyVariables._gStreamerBackend?.dealloc()
         }
+    
 
         var factory = FLNativeViewFactory(messenger: registrar.messenger(), pipeline: pipeline)
         registrar.register(factory, withId: String(playerId))
-
+        SwiftFlutterGstreamerPlayerPlugin.isInit = true;
         result(playerId)
         break
       default:
