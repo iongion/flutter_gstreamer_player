@@ -10,6 +10,8 @@
 
 -(void) dealloc;
 
+-(void) setPipeline:(NSString*) pipelineString;
+
 @end
 
 #endif

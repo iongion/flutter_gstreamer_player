@@ -42,6 +42,7 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
 }
 
 
+
 -(void) dealloc
 {
     if (pipeline) {
@@ -51,6 +52,22 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
         pipeline = NULL;
     }
 }
+
+-(void) setPipeline:(NSString*) pipelineString {
+    dealloc()
+    GError *error = NULL;
+    pipeline = gst_parse_launch([pipelineString UTF8String], &error);
+
+    if (error) {
+        NSLog(@"Unable to build pipeline: %s", error->message);
+        gchar *message = g_strdup_printf("Unable to build pipeline: %s", error->message);
+        g_clear_error(&error);
+        [self setUIMessage:message];
+        g_free(message);
+        return;
+    }
+}
+
 
 /*
  * Private methods

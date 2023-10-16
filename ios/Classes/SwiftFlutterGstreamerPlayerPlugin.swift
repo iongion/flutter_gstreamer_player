@@ -90,22 +90,18 @@ public class SwiftFlutterGstreamerPlayerPlugin: NSObject, FlutterPlugin {
         let pipeline = args["pipeline"] as! String;
         let playerId = args["playerId"] as! Int64;
 
-        /* guard let factory = SwiftFlutterGstreamerPlayerPlugin.factory as? FLNativeViewFactory else { */
-        /*   print("Internal plugin error: factory does not initialized") */
-        /*   return */
-        /* } */
-        guard let registrar = SwiftFlutterGstreamerPlayerPlugin.registrar as? FlutterPluginRegistrar else {
-          print("Internal plugin error: registrar does not initialized")
-          return
-        }
-        if(SwiftFlutterGstreamerPlayerPlugin.isInit){
-            MyVariables._gStreamerBackend?.dealloc()
-        }
-    
-
+        if(SwiftFlutterGstreamerPlayerPlugin.isInit == false){
+          guard let registrar = SwiftFlutterGstreamerPlayerPlugin.registrar as? FlutterPluginRegistrar else {
+            print("Internal plugin error: registrar does not initialized")
+            return
+          }
         var factory = FLNativeViewFactory(messenger: registrar.messenger(), pipeline: pipeline)
         registrar.register(factory, withId: String(playerId))
         SwiftFlutterGstreamerPlayerPlugin.isInit = true;
+        }else{
+            let newPipeline = args["pipeline"] as! String
+            MyVariables._gStreamerBackend?.setPipeline(newPipeline)
+        }
         result(playerId)
         break
       default:
