@@ -98,11 +98,12 @@ public class SwiftFlutterGstreamerPlayerPlugin: NSObject, FlutterPlugin {
         var factory = FLNativeViewFactory(messenger: registrar.messenger(), pipeline: pipeline)
         registrar.register(factory, withId: String(playerId))
         SwiftFlutterGstreamerPlayerPlugin.isInit = true;
+        result(playerId)
         }else{
             let newPipeline = args["pipeline"] as! String
             MyVariables._gStreamerBackend?.setPipeline(newPipeline)
+            result(playerId)
         }
-        result(playerId)
         break
       default:
         result(FlutterMethodNotImplemented)

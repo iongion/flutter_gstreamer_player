@@ -28,7 +28,11 @@ class GstPlayerTextureController {
     return textureId;
   }
 
-  bool get isInitialized => textureId != 0;
+  Future<Null> dispose() {
+    return _channel.invokeMethod('dispose', {'textureId': textureId});
+  }
+
+  bool get isInitialized => textureId != null;
 }
 
 class GstPlayer extends StatefulWidget {
@@ -41,9 +45,8 @@ class GstPlayer extends StatefulWidget {
 }
 
 class _GstPlayerState extends State<GstPlayer> {
-  var currentPlatform = Platform.operatingSystem;
   final _controller = GstPlayerTextureController();
-  GlobalKey key = GlobalKey();
+  // GlobalKey key = GlobalKey();
   @override
   void initState() {
     initializeController();
@@ -69,12 +72,8 @@ class _GstPlayerState extends State<GstPlayer> {
   }
 
   @override
-  void dispose() {
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
+    var currentPlatform = Platform.operatingSystem;
     switch (currentPlatform) {
       case 'linux':
       case 'android':
@@ -86,18 +85,16 @@ class _GstPlayerState extends State<GstPlayer> {
         );
 
       case 'ios':
+        String viewType = _controller.textureId.toString();
         final Map<String, dynamic> creationParams = <String, dynamic>{};
-        print("on build textureId: ${_controller.textureId} ");
-        return Container(
-          child: _controller.isInitialized
-              ? UiKitView(
-                  viewType: _controller.textureId.toString(),
-                  layoutDirection: TextDirection.ltr,
-                  creationParams: creationParams,
-                  creationParamsCodec: const StandardMessageCodec(),
-                )
-              : null,
+        print("on build textureId: $viewType ");
+        return UiKitView(
+          viewType: viewType,
+          layoutDirection: TextDirection.ltr,
+          creationParams: creationParams,
+          creationParamsCodec: const StandardMessageCodec(),
         );
+
       default:
         throw UnsupportedError('Unsupported platform view');
     }
