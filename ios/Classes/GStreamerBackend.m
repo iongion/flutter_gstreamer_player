@@ -54,7 +54,11 @@ GST_DEBUG_CATEGORY_STATIC (debug_category);
 }
 
 -(void) setPipeline:(NSString*) pipelineString {
-    dealloc()
+     if (pipeline) {
+        gst_element_set_state(pipeline, GST_STATE_NULL);
+        gst_object_unref(pipeline);
+        pipeline = NULL;
+    }
     GError *error = NULL;
     pipeline = gst_parse_launch([pipelineString UTF8String], &error);
 
